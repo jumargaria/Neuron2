@@ -20,20 +20,21 @@ class Neuron{
     Neuron();
     ~Neuron(){};
 //====================Update================== 
-    bool update(long steps);
+    bool update(long steps, long clock);
 //====================Getters//Setters==================
     void setI_ext(double I);
     long getTimeSpike()const;
     double getMembranePotential()const;
     void setMembranePotential(double MP);
-    void setNeurons_post(std::vector<Neuron*>);
+    void setNeuron_post( Neuron* n);
     std::vector<Neuron*> getNeurons_post();
-    long gettsim()const;
+    void setBuffer(int valeur);
+    
     
 //====================Convertor==================  
     std::string double_to_string(double c)const;
 //====================Fonctions==================
-    void receive(long Tpre,double J);
+    void receive(double nbr_spike);
      
     
     
@@ -41,14 +42,14 @@ class Neuron{
     
 //====================Attributs==================
     double MembranePotential_;
-    long NbSpikes_;
-    long TimeSpikes_;
-    bool refractory_;
+    long NbSpikes_; //Number of spike
+    long TimeSpikes_;//Time of the last spike
+    bool refractory_;//retunr true if the state is refractory
     double RefractoryStep_;
-    long tsim_;
-    double Iext_;
+    long tsim_;//clock
+    double Iext_;//external current
     std::vector<Neuron*>Neurons_post;
-    
+    std::vector<int> Buffer_;
     
 
 };
