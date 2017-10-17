@@ -17,21 +17,21 @@
 
 //====================Constructor==================
 Neuron:: Neuron():MembranePotential_(0.0),NbSpikes_(0.0),TimeSpikes_(0.0),refractory_(false), RefractoryStep_(0.0),tsim_(0.0),Iext_(0.0) {
-    for(size_t i(0);i<D;++i){
-        Buffer_.push_back(0);
+    for(size_t i(0);i<(D+1);++i){
+        Buffer_.push_back(0.0);
     }
+        c1=exp(-h/TAU);
+     c2=RESISTANCE*(1-c1);
 }
 
 //====================Setters//Getters==================
 void Neuron:: setI_ext(double I){Iext_=I;}
+double Neuron:: getIext()const {return Iext_;}
 long Neuron:: getTimeSpike()const { return TimeSpikes_; }
 void Neuron:: setMembranePotential(double MP){ MembranePotential_=MP; }
 double Neuron:: getMembranePotential()const { return MembranePotential_; }
-void Neuron::setNeuron_post(Neuron* n){Neurons_post.push_back( n);}
-std::vector<Neuron*> Neuron:: getNeurons_post(){return Neurons_post;}
-void Neuron::setBuffer(int indice){
-	
-	 Buffer_[indice]+=1;}
+void Neuron::setBuffer(int indice){Buffer_[indice]+=1;}
+long Neuron:: getRefractoryStep()const { return RefractoryStep_; }
 //====================Convertor==================
 std::string Neuron::double_to_string(double c)const{
 std::stringstream ss;
@@ -41,8 +41,9 @@ std::string str = ss.str();
 }
 
 //====================Fonctions==================
-void Neuron::receive(double nbr_spikes){
-    MembranePotential_+=(nbr_spikes*J);
+void Neuron::receive(double nbr_spike){
+    MembranePotential_+= (nbr_spike*J);
+    
     
 }
 
@@ -54,7 +55,14 @@ bool Neuron:: update(long steps,long clock){
     const long t_stop =tsim_+steps;
     
     while(tsim_<t_stop){
-        
+        if(MembranePotential_>THRESHOLD){
+            
+            ++NbSpikes_;
+            TimeSpikes_= tsim_;
+            refractory_= true;
+            spike=true;
+            
+        }
         if(refractory_){
             MembranePotential_= 0.0;
             ++RefractoryStep_;
@@ -62,19 +70,13 @@ bool Neuron:: update(long steps,long clock){
              if(RefractoryStep_ > REF_STEPS) {
                RefractoryStep_=0;
                refractory_=false;
+               MembranePotential_=VRESET;
             }
-            
-        }else if(MembranePotential_>THRESHOLD){
-            
-            ++NbSpikes_;
-            TimeSpikes_= tsim_;
-            refractory_= true;
-            spike=true;
-            
+  
         }else{
-     MembranePotential_= exp(-h/TAU)* MembranePotential_+ Iext_*RESISTANCE*(1-exp(-h/TAU));
-     receive(Buffer_[clock%D]);
-     Buffer_[clock%D]=0;
+     MembranePotential_= (c1* MembranePotential_)+ (Iext_*c2);
+     receive(Buffer_[clock%(D+1)]);
+     Buffer_[clock%(D+1)]=0;
      }
       ++tsim_;
      

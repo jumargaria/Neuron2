@@ -23,12 +23,12 @@ class Neuron{
     bool update(long steps, long clock);
 //====================Getters//Setters==================
     void setI_ext(double I);
+    double getIext()const;
     long getTimeSpike()const;
     double getMembranePotential()const;
     void setMembranePotential(double MP);
-    void setNeuron_post( Neuron* n);
-    std::vector<Neuron*> getNeurons_post();
     void setBuffer(int valeur);
+    long getRefractoryStep()const;
     
     
 //====================Convertor==================  
@@ -48,8 +48,9 @@ class Neuron{
     double RefractoryStep_;
     long tsim_;//clock
     double Iext_;//external current
-    std::vector<Neuron*>Neurons_post;
     std::vector<int> Buffer_;
+    double c1;
+    double c2;
     
 
 };
