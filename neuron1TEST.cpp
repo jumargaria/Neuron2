@@ -13,19 +13,14 @@ TEST(neuron1TEST, MembranePotential_){
             
         }
 
-TEST(neuron1TEST, TimeSpikes_){
+TEST(neuron1TEST, MembranePotential_){
     Neuron n;
-   int compteur(0);
-    bool spike(false);
+    int nbr_spikes(0);
      n.setI_ext(1.01);
     //Second update test
-    while(compteur< 1000){
-      spike = n.update(1,1000+compteur);
-      if (spike){
-      EXPECT_EQ(n.getRefractoryStep(),1);
-      spike = false;
-      }
-        ++compteur;
+     n.update(1,1000);
+    if (spike){
+    EXPECT_EQ(n.getMembranePotential()-20.0, 0.0)
     }
 
 
