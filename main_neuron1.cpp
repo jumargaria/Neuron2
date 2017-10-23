@@ -17,25 +17,23 @@
 
 int main (int argc,char*argv[]){
     
-    // ===============constants==========================
     double I_ext(1.01);
+    
     int i_start=1000;// step to start
     int i_stop=4000;// step to stop
     int t_stop=5000;//time to stop
     int nbrNeurons(2);
     
-    std::vector<Neuron> Neurons(nbrNeurons);// vector representing the network with all the neurons
-    std::vector<std::vector<bool> >Connections(Neurons.size(),std::vector<bool>(Neurons.size()));// vector of boolean which simulate the connections ( e.g. return true in Connections[1][2] if the neurone 1 is connected with the neuron 2)
+    std::vector<Neuron> Neurons(nbrNeurons);
     
- // ==================simulation==========================
-    //
+    std::vector<std::vector<bool> >Connections(Neurons.size(),std::vector<bool>(Neurons.size()));
     for(size_t i(0); i<Neurons.size();++i){
         for(size_t j(0);j<Neurons.size();++j){
             Connections[i][j]=false;
         }
     }
     Connections[0][1]=true;
-    // allows the simulator to choose Iext , by default Iext= 1.01
+    
     std::ofstream sortie("membrane_potential.txt", std::ios::out|std::ios::app);
     
     if(argc>1){
@@ -43,13 +41,11 @@ int main (int argc,char*argv[]){
     }
     std::cout << "I_ext=" << I_ext << std::endl;
     
-    
     bool spike(false);
     long t(0);
     while(t<t_stop){
         
-        if(Neurons.empty()) return 0;//Test if there is no neurons => do nothing
-        
+        if(Neurons.empty()) return 0;//Test si le tableau est vide
         for(size_t i(0);i<Neurons.size();++i){
             if((t>=i_start) and (t<=i_stop)){
 				if(i==0){
@@ -57,6 +53,7 @@ int main (int argc,char*argv[]){
                 }else{
                 Neurons[i].setI_ext(0.0);
                 }
+                //std::cout<<i+1<<" = "<<Neurons[i].getIext()<< std::endl;
                 spike=Neurons[i].update(1,t);
                 
                 if (spike){

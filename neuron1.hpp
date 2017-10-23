@@ -14,46 +14,45 @@
 #include <string>
 #include <cassert>
 #include <vector>
-
 class Neuron{
-    
     public:
 //====================Constructors---Destructors==================
     Neuron();
     ~Neuron(){};
 //====================Update================== 
-    bool update(long steps, long clock);//reponsible of all the update of membrane potential at each time
+    bool update(long steps, long clock);
 //====================Getters//Setters==================
-    void setI_ext(double I); // Iext= I
-    double getIext()const;//return the current Iext
-    long getTimeSpike()const;//return the last time spiking
-    double getMembranePotential()const;//return the current membrane potential
-    void setMembranePotential(double MP);// Membrane potential = MP
-    void setBuffer(int indice);//add +1 to the "indice" part of the buffer
+    void setI_ext(double I);
+    double getIext()const;
+    long getTimeSpike()const;
+    double getMembranePotential()const;
+    void setMembranePotential(double MP);
+    void setBuffer(int valeur);
+    long getRefractoryStep()const;
+    long getNbrSpikes()const ;
     
     
 //====================Convertor==================  
-    std::string double_to_string(double c)const;// convert a string into a double ( useful to write the membrane potential value in the .txt file
-    
-//====================Functions==================
-    void receive(double nbr_spike); // function responsible of adding J times the number present in the buffer ( corresponding to the number of pre synaptic neurone that spike at a time t)
+    std::string double_to_string(double c)const;
+//====================Fonctions==================
+    void receive(double nbr_spike);
      
     
     
     private:
     
 //====================Attributs==================
-    double MembranePotential_;// Membrane Potential 
+    double MembranePotential_;
     long NbSpikes_; //Number of spike
     long TimeSpikes_;//Time of the last spike
-    bool refractory_;//return true if the state is refractory
-    double RefractoryStep_;// Refractory time in step
+    bool refractory_;//retunr true if the state is refractory
+    double RefractoryStep_;
     long tsim_;//clock
     double Iext_;//external current
-    std::vector<int> Buffer_;// to store the spike and deliver it in right time t+ D
-    double c1; // constant of integration
-    double c2;// constant of integration
-    
+    std::vector<int> Buffer_;
+    double c1;
+    double c2;
+    double J;
 
 };
 
