@@ -16,8 +16,8 @@
 #include <vector>
 #include <random>
 //====================Constructor==================
-Neuron:: Neuron():MembranePotential_(0.0),NbSpikes_(0.0),TimeSpikes_(0.0),refractory_(false), RefractoryStep_(0.0),tsim_(0.0),Iext_(0.0),J(JE){
-    for(size_t i(0);i<(D+1);++i){
+Neuron:: Neuron():MembranePotential_(0.0),NbSpikes_(0.0),TimeSpikes_(0.0),refractory_(false), RefractoryStep_(0.0),tsim_(0.0),Iext_(1.01),J(JE){
+    for(size_t i(0);i<(DELAY+1);++i){
         Buffer_.push_back(0.0);
     }
         c1=exp(-h/TAU);
@@ -25,21 +25,59 @@ Neuron:: Neuron():MembranePotential_(0.0),NbSpikes_(0.0),TimeSpikes_(0.0),refrac
 }
 
 //====================Setters//Getters==================
-void Neuron:: setI_ext(double I){Iext_=I;}
 /**
+ * Getter for external current
  @return current value of External current
  */
 double Neuron:: getIext()const {return Iext_;}
 /**
+ * Getter for Time Spike
  @return current value of Spike time
  */
 long Neuron:: getTimeSpike()const { return TimeSpikes_; }
-void Neuron:: setMembranePotential(double MP){ MembranePotential_=MP; }
-double Neuron:: getMembranePotential()const { return MembranePotential_; }
-void Neuron::setBuffer(int indice){Buffer_[indice]+=1;}
+/**
+ * Getter for Refractory Step ??
+ @return current value of RefractoryStep
+ */
 long Neuron:: getRefractoryStep()const { return RefractoryStep_; }
+/**
+ * Getter for Number of spike
+ @return current value of Number of spike
+ */
 long Neuron:: getNbrSpikes()const { return NbSpikes_; }
+/**
+ * Getter for J
+ @return current value of J
+ */
+double Neuron::getJ()const{return J;}
+/**
+ * Getter for Membrane potential
+ @return current value of Membrane Potential
+ */
+double Neuron:: getMembranePotential()const { return MembranePotential_; }
+/**
+ Set Membrane Potential
+ @param MP: Membrane potential
+ */
+void Neuron:: setMembranePotential(double MP){ MembranePotential_=MP; }
+// besoin?
+void Neuron::setBuffer(int indice){Buffer_[indice]+=1;}
+/**
+ Set external current
+ @param i_ext: external current
+ */
+void Neuron:: setI_ext(double I){Iext_=I;}
+/**
+ Set J
+ @param j: weight of the connection in mV
+ */
+void Neuron::setJ( double j){J=j;}
 //====================Convertor==================
+/**
+ Convert a double into a string
+ @param c: the double to convert
+ @return c in string
+ */
 std::string Neuron::double_to_string(double c)const{
 std::stringstream ss;
 ss << c;
@@ -48,17 +86,29 @@ std::string str = ss.str();
 }
 
 //====================Fonctions==================
-void Neuron::receive(double nbr_spike){
-    MembranePotential_+= (nbr_spike*J);
-    
-    
+/**
+ Receive a sike a time arrival with height j.
+ If more than one spike arrives at the same time, j is the sum of ...
+ @param arrival: time in step at which the spike arrives
+ @param j: weight of the connection in mV
+ */
+void Neuron::receive(unsigned long arrival, double j){
+    const size_t time = arrival%(DELAY+1);
+    assert (time<Buffer_.size());
+    Buffer_[time]+=j;
 }
 
 //====================Update==================
-bool Neuron:: update(long steps,long clock){
+/**
+ update the state of the neurone each time t
+ @param steps: number of steps of simulation
+ */
+bool Neuron:: update(long steps){
 	
     bool spike(false);
-    std::poisson_distribution<> poisson(NU_ext * CE * h * J); // to have NU_extin ms/steps
+    double lamdba (NU_ext * CE * h * J);
+    
+    std::poisson_distribution<> poisson(lambda); // to have NU_ext in ms/steps
     
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -66,6 +116,7 @@ bool Neuron:: update(long steps,long clock){
     if(steps<=0) return false;
     
     const long t_stop =tsim_+steps;
+    const auto t_in= tsim_%(DELAY+1);
     
     while(tsim_<t_stop){
         if(MembranePotential_>THRESHOLD){
@@ -77,6 +128,7 @@ bool Neuron:: update(long steps,long clock){
             
         }
         if(refractory_){
+			std::cout << "MP ref "<<MembranePotential_<< std::endl;
             MembranePotential_= 0.0;
             ++RefractoryStep_;
             
@@ -87,9 +139,12 @@ bool Neuron:: update(long steps,long clock){
             }
   
         }else{
-     MembranePotential_= ((c1* MembranePotential_) + (Iext_*c2) + poisson(gen));
-     receive(Buffer_[clock%(D+1)]);
-     Buffer_[clock%(D+1)]=0;
+     MembranePotential_= ((c1* MembranePotential_) + (Iext_*c2)
+                          + Buffer_[t_in]+ poisson(gen));
+                          std::cout << "Poisson  "<<poisson(gen)<< std::endl;
+                          
+     std::cout << "MP2  "<<MembranePotential_<< std::endl;
+     Buffer_[t_in]=0;
      }
       ++tsim_;
      
