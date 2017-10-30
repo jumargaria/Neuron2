@@ -106,12 +106,12 @@ void Neuron::receive(unsigned long arrival, double j){
 bool Neuron:: update(long steps){
 	
     bool spike(false);
-    double lamdba (NU_ext * CE * h * J);
-    
-    std::poisson_distribution<> poisson(lambda); // to have NU_ext in ms/steps
-    
-    std::random_device rd;
-    std::mt19937 gen(rd());
+    double lambda (NU_ext* h);
+    std::cout<< lambda << std::endl;
+   // assert ((lambda <3) and (lambda >1));
+    static std::poisson_distribution<> poisson(lambda); // to have NU_ext in ms/steps
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
     
     if(steps<=0) return false;
     
@@ -128,7 +128,7 @@ bool Neuron:: update(long steps){
             
         }
         if(refractory_){
-			std::cout << "MP ref "<<MembranePotential_<< std::endl;
+			//std::cout << "MP ref "<<MembranePotential_<< std::endl;
             MembranePotential_= 0.0;
             ++RefractoryStep_;
             
@@ -140,10 +140,10 @@ bool Neuron:: update(long steps){
   
         }else{
      MembranePotential_= ((c1* MembranePotential_) + (Iext_*c2)
-                          + Buffer_[t_in]+ poisson(gen));
-                          std::cout << "Poisson  "<<poisson(gen)<< std::endl;
+                          + Buffer_[t_in]+ poisson(gen)*JE);
                           
-     std::cout << "MP2  "<<MembranePotential_<< std::endl;
+                          
+   //  std::cout << "MP2  "<<MembranePotential_<< std::endl;
      Buffer_[t_in]=0;
      }
       ++tsim_;
