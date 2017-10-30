@@ -101,14 +101,13 @@ void Neuron::receive(unsigned long arrival, double j){
 //====================Update==================
 /**
  update the state of the neurone each time t
- @param steps: number of steps of simulation
+ @param steps: number of simulation steps
  */
 bool Neuron:: update(long steps){
 	
     bool spike(false);
     double lambda (NU_ext* h);
-    std::cout<< lambda << std::endl;
-   // assert ((lambda <3) and (lambda >1));
+    assert ((lambda <3) and (lambda >1));
     static std::poisson_distribution<> poisson(lambda); // to have NU_ext in ms/steps
     static std::random_device rd;
     static std::mt19937 gen(rd());
@@ -128,7 +127,6 @@ bool Neuron:: update(long steps){
             
         }
         if(refractory_){
-			//std::cout << "MP ref "<<MembranePotential_<< std::endl;
             MembranePotential_= 0.0;
             ++RefractoryStep_;
             
@@ -142,8 +140,6 @@ bool Neuron:: update(long steps){
      MembranePotential_= ((c1* MembranePotential_) + (Iext_*c2)
                           + Buffer_[t_in]+ poisson(gen)*JE);
                           
-                          
-   //  std::cout << "MP2  "<<MembranePotential_<< std::endl;
      Buffer_[t_in]=0;
      }
       ++tsim_;
