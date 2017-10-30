@@ -18,8 +18,8 @@
 
 int main (){
 
-    int t_stop=10000;//time to stop
-    int const nbrNeurons(12500);
+    unsigned int t_stop=10000;//time to stop
+    unsigned int const nbrNeurons(12500);
     
     Network Net(nbrNeurons,NE,NI);
     Net.update(t_stop);
