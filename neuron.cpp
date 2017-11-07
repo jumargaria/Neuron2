@@ -11,10 +11,11 @@
 #include <sstream>
 #include <cmath>
 #include <string>
-#include "constants.hpp"
+
 #include <cassert>
 #include <vector>
 #include <random>
+
 //====================Constructor==================
 Neuron:: Neuron(bool background_noise):MembranePotential_(0.0),NbSpikes_(0.0),TimeSpikes_(0.0),refractory_(false), RefractoryStep_(0.0),tsim_(0.0),Iext_(0.0),J(JE),background_noise_(background_noise){
     
@@ -41,17 +42,9 @@ double Neuron:: getMembranePotential()const { return MembranePotential_; }
 
 void Neuron:: setMembranePotential(double MP){ MembranePotential_=MP; }
 
-void Neuron:: setI_ext(double I){ Iext_=I; }
+void Neuron:: setI_ext(double i_ext){ Iext_=i_ext; }
 
 void Neuron::setJ( double j){ J=j; }
-//====================Convertor==================
-
-std::string Neuron::double_to_string(double c)const{
-std::stringstream ss;
-ss << c;
-std::string str = ss.str();
-    return str;
-}
 
 //====================Functions==================
 void Neuron::receive(unsigned long arrival, double j){
@@ -65,15 +58,15 @@ bool Neuron:: update(long steps){
 	
     bool spike(false);
     double lambda (NU_ext* h);
-   // assert ((lambda <3) and (lambda >1));
-    static std::poisson_distribution<> poisson(2); // to have NU_ext in ms/steps
+    assert ((lambda <3) and (lambda >1));
+    static std::poisson_distribution<> poisson(lambda); // to have NU_ext in ms/steps
     static std::random_device rd;
     static std::mt19937 gen(rd());
     
     if(steps<=0) return false;
     
-    const long t_stop =tsim_+steps;
-    const auto t_in= tsim_%(DELAY+1);
+    const unsigned  long t_stop = tsim_+steps;
+    const auto t_in = tsim_%(DELAY+1);
     
     while(tsim_<t_stop){
         if(MembranePotential_>THRESHOLD){
@@ -85,12 +78,12 @@ bool Neuron:: update(long steps){
             
         }
         if(refractory_){
-            MembranePotential_= 0.0;
+            MembranePotential_ = 0.0;
             ++RefractoryStep_;
             
              if(RefractoryStep_ > REF_STEPS) {
-               RefractoryStep_=0;
-               refractory_=false;
+               RefractoryStep_ = 0;
+               refractory_ = false;
                MembranePotential_=VRESET;
             }
   
@@ -104,7 +97,7 @@ bool Neuron:: update(long steps){
 		MembranePotential_+= poisson(gen)*JE;
 			}
             
-     Buffer_[t_in]=0;
+     Buffer_[t_in]=0; // reset the buffer to 0 ...
      }
       ++tsim_;
     }

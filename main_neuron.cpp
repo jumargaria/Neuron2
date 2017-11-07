@@ -6,9 +6,9 @@
 //
 //
 
-#include "neuron.hpp"
+
 #include "Network.hpp"
-#include "constants.hpp"
+
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -19,9 +19,8 @@
 int main (){
 
     unsigned int t_stop=10000;//time to stop the simulation
-    unsigned int const nbrNeurons(12500);
     
-    Network Net(nbrNeurons,NE,NI);
+    Network Net;
     Net.update(t_stop);
 
 return 0;

@@ -1,11 +1,15 @@
-#include "neuron.hpp"
+
 #include "Network.hpp"
 #include <iostream>
 #include <cmath>
 #include "gtest/gtest.h"
-#include "constants.hpp"
-
-TEST(neuron1TEST, MembranePotential_){
+/**
+ * @class TESTS
+ * brief class to test
+ *
+ */
+// Test the right value of Membrane Potential
+TEST(Single_neuron, MembranePotential_){
     Neuron neuron(false);
     neuron.setI_ext(1.0);
     
@@ -21,102 +25,113 @@ TEST(neuron1TEST, MembranePotential_){
     neuron.update(20000);
     EXPECT_NEAR(0, neuron.getMembranePotential(), 1E-4);
 }
-
-TEST(neuron1TEST, TimeSpikes_){
-    Neuron neurone(false);
-    neurone.setI_ext(1.01);
-    neurone.update(924 );
-    EXPECT_EQ(0, neurone.getNbrSpikes());
-    neurone.update(1);
-    EXPECT_EQ(1,neurone.getNbrSpikes());
-    EXPECT_EQ(0.0, neurone.getMembranePotential());
+// Test the right value of TimeSpikes_
+TEST(Single_neuron, TimeSpikes_){
+    Neuron neuron(false);
+    neuron.setI_ext(1.01);
+    neuron.update(924 );
+    EXPECT_EQ(0, neuron.getNbrSpikes());
+    neuron.update(1);
+    EXPECT_EQ(1,neuron.getNbrSpikes());
+    EXPECT_EQ(0.0, neuron.getMembranePotential());
     
-    neurone.update(944);
-    EXPECT_EQ(1, neurone.getNbrSpikes());
-    neurone.update(1);
-    EXPECT_EQ(2, neurone.getNbrSpikes());
+    neuron.update(944);
+    EXPECT_EQ(1, neuron.getNbrSpikes());
+    neuron.update(1);
+    EXPECT_EQ(2, neuron.getNbrSpikes());
 }
-TEST(neuron1TEST, NoPostSYnapticSpike){
+// Test the right connection between two neurons withhout post synaptic spike
+TEST(Two_neurons, NoPostSYnapticSpike){
     Neuron neuron1(false);
-    Neuron neurone2(false);
+    Neuron neuron2(false);
     
     neuron1.setI_ext(1.01);
     for (unsigned int i(0); i<925+DELAY+1;++i){
         if (neuron1.update(1)){
 			
             EXPECT_EQ(0.0, neuron1.getMembranePotential());
-            neurone2.update(1);
-            neurone2.receive(i,neuron1.getJ());
+            neuron2.update(1);
+            neuron2.receive(i,neuron1.getJ());
         }else{
         
-        neurone2.update(1);
+        neuron2.update(1);
         }
-        EXPECT_EQ(0, neurone2.getNbrSpikes());
+        EXPECT_EQ(0, neuron2.getNbrSpikes());
     }
-EXPECT_EQ(0.1, neurone2.getMembranePotential());
-    
+EXPECT_EQ(0.1, neuron2.getMembranePotential());
 }
-TEST(neuron1TEST, WITHPostSynapticSpike){
-    Neuron neurone1(false);
-    Neuron neurone2(false);
+
+// Test th right connection between two neurons with post synaptic spike
+TEST(Two_neurons, WITHPostSynapticSpike){
+    Neuron neuron1(false);
+    Neuron neuron2(false);
     
-    neurone1.setI_ext(1.01);
-    neurone2.setI_ext(1.0);
+    neuron1.setI_ext(1.01);
+    neuron2.setI_ext(1.0);
     
     for (unsigned int i(0); i<1870+DELAY+1;++i){
-        if (neurone1.update(1)){
-            EXPECT_EQ(0.0, neurone1.getMembranePotential());
-            neurone2.update(1);
-            neurone2.receive(i,neurone1.getJ());
+        if (neuron1.update(1)){
+            EXPECT_EQ(0.0, neuron1.getMembranePotential());
+            neuron2.update(1);
+            neuron2.receive(i,neuron1.getJ());
         }else{
-        neurone2.update(1);
+        neuron2.update(1);
     }
     }
-    EXPECT_EQ(0, neurone2.getNbrSpikes());
-    neurone2.update(1);
-    EXPECT_EQ(0, neurone2.getMembranePotential());
-    EXPECT_EQ(1,neurone2.getNbrSpikes());
+    EXPECT_EQ(0, neuron2.getNbrSpikes());
+    neuron2.update(1);
+    EXPECT_EQ(0, neuron2.getMembranePotential());
+    EXPECT_EQ(1,neuron2.getNbrSpikes());
     
 }
 
-TEST(neuron1TEST,right_J){
-    Network net(1000, 500, 500);
-    for ( unsigned int i(0); i< net.getNeurons().size(); ++i ){
-		assert(i<net.getNeurons().size());
+// Test the right value of J for each neurons of the network
+TEST(Networks,right_J){
+    Network net;
+    unsigned long N(net.getNeurons().size());
+    for ( unsigned int i(0); i< N; ++i ){
+		assert(i<N);
+		Neuron Neuron_i(net.getNeurons()[i]);
 		
-        if(i<net.getNE()){
-        EXPECT_EQ(JE, net.getNeurons()[i].getJ());
+        if(i<NE){
+        EXPECT_EQ(JE, Neuron_i.getJ());
         }else{
-        EXPECT_EQ(JI, net.getNeurons()[i].getJ());
+        EXPECT_EQ(JI,Neuron_i.getJ());
         }
     }
 }
 
-TEST(neuron1TEST, Connections){
-    Network net(15,10,5);
-    for (unsigned i(0); i<net.getNeurons().size(); ++i){
-    assert(i<net.getNeurons().size());
-    unsigned int compteurCE(0);
-    unsigned int compteurCI(0);
-        for(unsigned j(0); j<net.getNbrNeurons(); ++j){
-            assert(j<net.getNeurons().size());
-        for (unsigned k(0); k<net.getConnections()[j].size(); ++k ){
-            assert(k<net.getConnections()[j].size());
-
-            if((net.getConnections()[j][k])==i){
-            if(j<net.getNE()){
-                    ++compteurCE;
-                }else{
-                    ++compteurCI;
-                }
+TEST(Networks, Connections){
+    Network net;   
+    std::vector<std::vector<unsigned int> >Connect (NbrNeuron, std::vector<unsigned int>(2,0));  
+    unsigned long N (net.getNeurons().size());
+    
+    for (unsigned int i(0); i<N; ++i){
+        assert(i<N);
+        unsigned long Neuron_i_send_size(net.getConnections()[i].size());
         
+        for (unsigned int j(0); j<Neuron_i_send_size; ++j ){
+            assert(j<Neuron_i_send_size);
+            unsigned long Neuron_i_receive(net.getConnections()[i][j]);
+
+                      if(i < NE){
+           ++Connect[Neuron_i_receive][0];
+  
+            }else{
+                
+                ++Connect[Neuron_i_receive][1];
             }
         }
-        }
-        EXPECT_EQ(net.getCE(), compteurCE);
-        EXPECT_EQ(net.getCI(), compteurCI);
+   }
+     
+    for (unsigned int i(0); i<NbrNeuron; ++i){	
+			 assert(i<Connect.size());
+        EXPECT_EQ(CE,Connect[i][0] );
+        EXPECT_EQ(CI, Connect[i][1]);
     }
-}
+    
+} 
+
 
 int main(int argc, char **argv){
             ::testing::InitGoogleTest(&argc,argv);

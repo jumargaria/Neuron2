@@ -16,10 +16,25 @@
 #include <cassert>
 #include <vector>
 #include "neuron.hpp"
+/**
+ * @class Network
+ * brief class to simulate a network 
+ * 12500 neurons in all stored in a vector : Neurons
+ * with 10000 excitatory neurons and 2500 inhibitory neurons
+ * generate connections in a random way 
+ * ( 1000 excitatory connections and 250 inhibitory connections for each neurons)
+ * update each neurons in a periode of time 
+ */
 class Network {
     public:
 //====================Constructor/Destructor==================
-    Network (unsigned int nbr_neurons, long neurones_excit, long neurones_inhib) ;
+    /**
+     * Constructor
+     */
+    Network ();
+    /**
+     * Destructor
+     */
     ~Network(){};
 //====================Setters//Getters==================
     /**
@@ -31,53 +46,23 @@ class Network {
      * Getter Connections
      @return all the connections between the neurones
      */
-    std::vector<std::vector<int> > getConnections () const;
-    /**
-     * Getter NE_
-     @return number of excitatory neurons in the network
-     */
-    long getNE()const;
-    /**
-     * Getter NI_
-     @return number of inhibitory neurons in the network
-     */
-    long getNI()const;
-    /**
-     * Getter CE_
-     @return number of connection with excitatory neurons for each neuron
-     */
-    long getCE()const;
-    /**
-     * Getter CI_
-     @return number of connection with inhibitory neurons for each neuron
-     */
-    long getCI()const;
-    /**
-     * Getter NbrNeuron_
-     @return number of neuron in the network
-     */
-    long getNbrNeurons()const;
+    std::vector<std::vector<unsigned int> > getConnections () const;
+ 
+   
     
 //====================Update==================
     /**
-     update the state of the network until the time 't_stop'
-     @param tstop: the time ...????
+     * update the state of the network until the time 't_stop'
+     @param tstop: the time of the last update for each neurons
      */
-    void update( unsigned long tstop);
+     
+    void update( unsigned long t_stop);
     
     private:
 //====================Attributs==================
 
     std::vector<Neuron> Neurons_;//!< vector of all neurons
-    std::vector<std::vector<int> >Connections_;//!< connections between the different neurons
-    unsigned long NE_;//!<Number of neurons excitatory
-    unsigned long NI_;//!< Number of inhibitory neurons
-    unsigned long NbrNeuron_;//!< total number of neurons
-    unsigned long  CE_;//!<connections from the excitatory neurons in the network
-    unsigned long  CI_;//!<connections from the inhibitory neurons in the network
-    unsigned long  C_EXT;//!< number of connections from outside the network
-    
-
+    std::vector<std::vector<unsigned int> >Connections_;//!< vector of connections between the all neurons
 
 };
 #endif /* Network_hpp */
