@@ -90,45 +90,65 @@ TEST(Networks,right_J){
     Network net;
     unsigned long N(net.getNeurons().size());
     for ( unsigned int i(0); i< N; ++i ){
-		assert(i<N);
-		Neuron Neuron_i(net.getNeurons()[i]);
 		
         if(i<NE){
-        EXPECT_EQ(JE, Neuron_i.getJ());
+        EXPECT_EQ(JE, net.getNeurons()[i].getJ());
         }else{
-        EXPECT_EQ(JI,Neuron_i.getJ());
+        EXPECT_EQ(JI,net.getNeurons()[i].getJ());
         }
     }
 }
-
+/*
 TEST(Networks, Connections){
     Network net;   
     std::vector<std::vector<unsigned int> >Connect (NbrNeuron, std::vector<unsigned int>(2,0));  
     unsigned long N (net.getNeurons().size());
     
     for (unsigned int i(0); i<N; ++i){
-        assert(i<N);
         unsigned long Neuron_i_send_size(net.getConnections()[i].size());
         
         for (unsigned int j(0); j<Neuron_i_send_size; ++j ){
-            assert(j<Neuron_i_send_size);
-            unsigned long Neuron_i_receive(net.getConnections()[i][j]);
+            std::vector<unsigned int> neurons_i = net.getConnections()[i];
 
                       if(i < NE){
-           ++Connect[Neuron_i_receive][0];
+           ++Connect[neurons_i[j]][0];
   
             }else{
                 
-                ++Connect[Neuron_i_receive][1];
+                ++Connect[neurons_i[j]][1];
             }
         }
    }
      
-    for (unsigned int i(0); i<NbrNeuron; ++i){	
-			 assert(i<Connect.size());
+    for (unsigned int i(0); i<NbrNeuron; ++i){
         EXPECT_EQ(CE,Connect[i][0] );
         EXPECT_EQ(CI, Connect[i][1]);
     }
+    
+} 
+
+*/
+TEST(Networks, Connections){
+    Network net;   
+    unsigned long N (net.getNeurons().size());
+    unsigned long CompteurCE (0);
+    unsigned long CompteurCI (0);
+    for (unsigned int i(0); i<N; ++i){
+        unsigned long Neuron_i_send_size(net.getConnections()[i].size());
+        
+        for (unsigned int j(0); j<Neuron_i_send_size; ++j ){
+			if(net.getConnections()[i][j]=0){
+			if(i < NE){
+             ++CompteurCE;
+  
+            }else{
+                ++CompteurCI;
+             }
+             }
+     }
+     }
+    EXPECT_EQ(CE, CompteurCE);
+    EXPECT_EQ(CI,CompteurCI );
     
 } 
 

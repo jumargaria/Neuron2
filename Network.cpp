@@ -35,12 +35,11 @@ Network :: Network ()
      
     for(size_t i(0); i<Neurons_.size(); i++){
 	assert (i<Neurons_.size());
-	Neuron N_i(Neurons_[i]);
-    N_i.setI_ext(Iext);
+    Neurons_[i].setI_ext(Iext);
     if(i<NE){
-        N_i.setJ(JE);
+        Neurons_[i].setJ(JE);
     }else{
-        N_i.setJ(JI);
+       Neurons_[i].setJ(JI);
     }
     unsigned int CompteurCE(0);
     unsigned int CompteurCI(0);
@@ -68,28 +67,23 @@ std::vector<std::vector<unsigned int> > Network :: getConnections()const {return
 void Network :: update( unsigned long t_stop){
     
   std::ofstream sortie("spikes.txt", std::ios::out|std::ios::app);
-  bool spike(false);
   unsigned long t(0);
   while(t<t_stop){
       
     if(! Neurons_.empty()){
       for(size_t i(0); i<Neurons_.size(); ++i){
-        assert(i<Neurons_.size());
-        spike=Neurons_[i].update(1);
+		 
           
-          if (spike){
+          if (Neurons_[i].update(1)){
              sortie<<(Neurons_[i].getTimeSpike())*h<<" "<<i+1<< std:: endl;
                
                for (size_t j(0);j<Connections_[i].size();++j){
-					    assert(j<Connections_[i].size());
                         Neurons_[Connections_[i][j]].receive(t,Neurons_[i].getJ());
                 }
             }
-            spike=false;
         }
         ++t;
     }
-    sortie.close();
   }
-
+ sortie.close();
 }
