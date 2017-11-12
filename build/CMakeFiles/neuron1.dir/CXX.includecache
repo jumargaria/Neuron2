@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/INTRANET/margaria/Desktop/myfiles/neurone/constants.hpp
+
+/home/INTRANET/margaria/Desktop/myfiles/neurone/main_neuron1.cpp
+neuron1.hpp
+/home/INTRANET/margaria/Desktop/myfiles/neurone/neuron1.hpp
+
+/home/INTRANET/margaria/Desktop/myfiles/neurone/neuron1.cpp
+neuron1.hpp
+/home/INTRANET/margaria/Desktop/myfiles/neurone/neuron1.hpp
+iostream
+-
+sstream
+-
+cmath
+-
+string
+-
+constants.hpp
+/home/INTRANET/margaria/Desktop/myfiles/neurone/constants.hpp
+
+/home/INTRANET/margaria/Desktop/myfiles/neurone/neuron1.hpp
+iostream
+-
+fstream
+-
+string
+-
+

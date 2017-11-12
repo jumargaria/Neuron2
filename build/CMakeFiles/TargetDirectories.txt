@@ -1,0 +1,5 @@
+/home/INTRANET/margaria/myfiles/neurone/build/CMakeFiles/neuron.dir
+/home/INTRANET/margaria/myfiles/neurone/build/CMakeFiles/neuron1TEST.dir
+/home/INTRANET/margaria/myfiles/neurone/build/CMakeFiles/doc.dir
+/home/INTRANET/margaria/myfiles/neurone/build/gtest/CMakeFiles/gtest.dir
+/home/INTRANET/margaria/myfiles/neurone/build/gtest/CMakeFiles/gtest_main.dir
