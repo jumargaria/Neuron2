@@ -111,29 +111,6 @@ TEST(Networks, Connections){
         
         for (unsigned int j(0); j<Neuron_i_send_size; ++j ){
             std::vector<unsigned int> neurons_i = connections[i];
-=======
-    unsigned long N(net.getNeurons().size());
-    for ( unsigned int i(0); i< N; ++i ){
-		
-        if(i<NE){
-        EXPECT_EQ(JE, net.getNeurons()[i].getJ());
-        }else{
-        EXPECT_EQ(JI,net.getNeurons()[i].getJ());
-        }
-    }
-}
-/*
-TEST(Networks, Connections){
-    Network net;   
-    std::vector<std::vector<unsigned int> >Connect (NbrNeuron, std::vector<unsigned int>(2,0));  
-    unsigned long N (net.getNeurons().size());
-    
-    for (unsigned int i(0); i<N; ++i){
-        unsigned long Neuron_i_send_size(net.getConnections()[i].size());
-        
-        for (unsigned int j(0); j<Neuron_i_send_size; ++j ){
-            std::vector<unsigned int> neurons_i = net.getConnections()[i];
->>>>>>> 4272d06dbac65653125863db7420ad3f83fbb81d
 
                       if(i < NE){
            ++Connect[neurons_i[j]][0];
@@ -152,35 +129,9 @@ TEST(Networks, Connections){
     
 } 
 
-<<<<<<< HEAD
-=======
-*/
-TEST(Networks, Connections){
-    Network net;   
-    unsigned long N (net.getNeurons().size());
-    unsigned long CompteurCE (0);
-    unsigned long CompteurCI (0);
-    for (unsigned int i(0); i<N; ++i){
-        unsigned long Neuron_i_send_size(net.getConnections()[i].size());
-        
-        for (unsigned int j(0); j<Neuron_i_send_size; ++j ){
-			if(net.getConnections()[i][j]=0){
-			if(i < NE){
-             ++CompteurCE;
-  
-            }else{
-                ++CompteurCI;
-             }
-             }
-     }
-     }
-    EXPECT_EQ(CE, CompteurCE);
-    EXPECT_EQ(CI,CompteurCI );
-    
-} 
 
 
->>>>>>> 4272d06dbac65653125863db7420ad3f83fbb81d
+
 int main(int argc, char **argv){
             ::testing::InitGoogleTest(&argc,argv);
             return RUN_ALL_TESTS();
