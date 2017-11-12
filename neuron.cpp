@@ -58,6 +58,10 @@ bool Neuron:: update(long steps){
 	
     bool spike(false);
     double lambda (NU_ext* h);
+<<<<<<< HEAD
+=======
+    assert ((lambda <3) and (lambda >1));
+>>>>>>> 4272d06dbac65653125863db7420ad3f83fbb81d
     static std::poisson_distribution<> poisson(lambda); // to have NU_ext in ms/steps
     static std::random_device rd;
     static std::mt19937 gen(rd());

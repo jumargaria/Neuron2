@@ -26,7 +26,13 @@ Network :: Network ()
     static std::uniform_int_distribution<unsigned int> distributionCI(NE,Neurons_.size()-1);
     
     assert(Neurons_.size()!=0);
+<<<<<<< HEAD
     for(size_t i(0); i<Neurons_.size(); i++){
+=======
+   // std::vector<std::vector<unsigned int> >Connections_ (NbrNeuron, std::vector<unsigned int>subvector );
+    for(size_t i(0); i<Neurons_.size(); i++){
+		assert(i<Neurons_.size());
+>>>>>>> 4272d06dbac65653125863db7420ad3f83fbb81d
         std::vector<unsigned int> subvector;
         Connections_.push_back(subvector);
     } 
@@ -73,7 +79,11 @@ void Network :: update( unsigned long t_stop){
 		 
           
           if (Neurons_[i].update(1)){
+<<<<<<< HEAD
              sortie<<(Neurons_[i].getTimeSpike())*h*0.01<<" "<<i+1<< std:: endl;
+=======
+             sortie<<(Neurons_[i].getTimeSpike())*h<<" "<<i+1<< std:: endl;
+>>>>>>> 4272d06dbac65653125863db7420ad3f83fbb81d
                
                for (size_t j(0);j<Connections_[i].size();++j){
                         Neurons_[Connections_[i][j]].receive(t,Neurons_[i].getJ());
