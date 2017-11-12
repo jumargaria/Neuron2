@@ -88,7 +88,7 @@ TEST(Two_neurons, WITHPostSynapticSpike){
 // Test the right value of J for each neurons of the network
 TEST(Networks,right_J){
     Network net;
-<<<<<<< HEAD
+
     std::vector<Neuron> Neurons=net.getNeurons();
     unsigned long N(Neurons.size());
     for ( unsigned int i(0); i< N; ++i ){
